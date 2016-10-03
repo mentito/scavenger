@@ -20,7 +20,9 @@ app.post('/harvests', async (req, res) => {
   try {
     ({ data, status } = await request(source, render))
   } catch (e) {
-    ({ data, status } = e)
+    return res.status(e.response.status).json({
+      error: e.response.data
+    })
   }
 
   harvest(data, context, selector)((error, content) => {
