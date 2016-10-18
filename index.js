@@ -20,7 +20,6 @@ app.post('/harvests', async (req, res) => {
   try {
     ({ data, status } = await request(source, render))
   } catch (e) {
-    console.log('1', e)
     return res.status(e.response.status).json({
       error: e.response.data
     })
