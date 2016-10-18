@@ -17,16 +17,17 @@ app.post('/harvests', async (req, res) => {
 
   let data, status;
 
-  try {
-    ({ data, status } = await request(source, render))
-  } catch (e) {
-    return res.status(e.response.status).json({
-      error: e.response.data
-    })
-  }
+  request(source, render).then(function (response) {
+    data = response.data
+    status = response.status
 
-  harvest(data, context, selector)((error, content) => {
-    res.status(status).json(content)
+    harvest(data, context, selector)(function (error, content) {
+      res.status(status).json(content)
+    })
+  }).catch(function (error) {
+    return res.status(error.response.status || 500).json({
+      error: error.response.data || error
+    })
   })
 })
 
